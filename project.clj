@@ -6,4 +6,4 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [the/parsatron "0.0.3"]
                  [org.clojure/math.combinatorics "0.0.3"]
-                 ])
+                 [roul "0.2.0"]])
