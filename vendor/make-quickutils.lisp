@@ -8,7 +8,6 @@
                :curry
                :rcurry
                :with-gensyms
-               :read-file-into-string
                :symb
 
                )

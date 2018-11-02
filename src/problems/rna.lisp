@@ -10,7 +10,7 @@
 ;;
 ;; Return: The transcribed RNA string of t.
 
-(define-problem rna (data)
+(define-problem rna (data string)
     "GATGGAACTTGACTACGTAAATT"
     "GAUGGAACUUGACUACGUAAAUU"
   (substitute #\U #\T data))

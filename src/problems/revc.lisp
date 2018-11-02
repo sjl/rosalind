@@ -11,10 +11,9 @@
 ;;
 ;; Return: The reverse complement sc of s.
 
-(define-problem revc (data)
+(define-problem revc (data string)
     "AAAACCCGGT"
     "ACCGGGTTTT"
-  (copyf data)
   (flet ((dna-complement (base)
            (case base
              (#\A #\T)

@@ -11,13 +11,14 @@
 ;; (separated by spaces) counting the respective number of times that the
 ;; symbols 'A', 'C', 'G', and 'T' occur in s.
 
-(define-problem dna (data)
+(define-problem dna (data string)
     "AGCTTTTCATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTAAAAAAAGAGTGTCTGATAGCAGC"
     "20 12 17 21"
   (let ((results (frequencies data)))
     (format nil "~D ~D ~D ~D"
-            (gethash #\A results)
-            (gethash #\C results)
-            (gethash #\G results)
-            (gethash #\T results))))
+            (gethash #\A results 0)
+            (gethash #\C results 0)
+            (gethash #\G results 0)
+            (gethash #\T results 0))))
 
+(problem-dna "AT")

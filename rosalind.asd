@@ -13,6 +13,7 @@
                :1am
                :iterate
                :losh
+               :alexandria
 
                )
 
@@ -27,5 +28,6 @@
                               :components ((:file "dna")
                                            (:file "rna")
                                            (:file "revc")
-                                           (:file "gc")))))))
+                                           (:file "gc")
+                                           (:file "hamm")))))))
 

@@ -35,7 +35,7 @@ TGGGAACCTGCGGGCAGTAGGTGGAAT")
 60.919540")
 
 
-(define-problem gc (data)
+(define-problem gc (data stream)
     *input-gc*
     *output-gc*
   (labels ((gcp (base)

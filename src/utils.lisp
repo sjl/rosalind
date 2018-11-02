@@ -1,6 +1,5 @@
 (in-package :rosalind)
 
-
 ;;;; Misc ---------------------------------------------------------------------
 (defun sh (command input)
   (declare (ignorable command input))
@@ -24,13 +23,15 @@
 (defun pbcopy (string)
   (values string (sh '("pbcopy") string)))
 
-(defmacro copyf (sequence)
-  `(setf ,sequence (copy-seq ,sequence)))
-
 (defun ensure-stream (input)
   (ctypecase input
     (stream input)
     (string (make-string-input-stream input))))
+
+(defun ensure-string (input)
+  (ctypecase input
+    (stream (alexandria:read-stream-content-into-string input))
+    (string (copy-seq input))))
 
 (defun nconcatenate (v1 v2)
   (let* ((l1 (length v1))
@@ -58,18 +59,17 @@
   "
   (* precision (round number precision)))
 
-
-;;;; Testing ------------------------------------------------------------------
-(defmacro define-test (problem input output &optional (test 'string=))
-  `(test ,(symb 'test- problem)
-     (is (,test ,output (,problem ,input)))))
-
-(defun run-tests ()
-  (1am:run))
+(defun hamming (sequence1 sequence2 &key (test #'eql))
+  (let ((result 0))
+    (map nil (lambda (x y)
+               (unless (funcall test x y)
+                 (incf result)))
+         sequence1
+         sequence2)
+    result))
 
 
 ;;;; File Formats -------------------------------------------------------------
-
 (defmacro-driver (FOR vars IN-FASTA source)
   (nest
     (destructuring-bind (label line) vars)
@@ -95,23 +95,34 @@
           (parse-next))))))
 
 
+;;;; Testing ------------------------------------------------------------------
+(defmacro define-test (problem input output &optional (test 'string=))
+  `(test ,(symb 'test- problem)
+     (is (,test ,output (,problem ,input)))))
+
+(defun run-tests ()
+  (1am:run))
+
 
 ;;;; Problems -----------------------------------------------------------------
-(defmacro define-problem (name args sample-input sample-output &body body)
+(defmacro define-problem (name (arg type) sample-input sample-output &body body)
   (let ((symbol (symb 'problem- name)))
     `(progn
-       (defun ,symbol ,args ,@body)
+       (defun ,symbol (,arg)
+         (setf ,arg ,(ecase type
+                       (string `(ensure-string ,arg))
+                       (stream `(ensure-stream ,arg))))
+         (aesthetic-string (progn ,@body)))
        (setf (get ',symbol 'rosalind-name) ,(string-downcase name))
        (define-test ,symbol ,sample-input ,sample-output)
        ',symbol)))
 
-(defun read-problem-data (problem)
-  (-<> (get problem 'rosalind-name)
-    (format nil "~~/Downloads/rosalind_~A.txt" <>)
-    read-file-into-string))
+(defun problem-data-path (problem)
+  (format nil "~~/Downloads/rosalind_~A.txt" (get problem 'rosalind-name)))
 
 (defun solve% (problem)
-  (pbcopy (funcall problem (read-problem-data problem))))
+  (with-open-file (input (problem-data-path problem))
+    (pbcopy (funcall problem input))))
 
 (defmacro solve (problem)
   `(solve% ',problem))
