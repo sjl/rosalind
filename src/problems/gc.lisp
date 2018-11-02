@@ -52,4 +52,4 @@ TGGGAACCTGCGGGCAGTAGGTGGAAT")
 
 
 ;; (problem-gc *input-gc*)
-;; (solve problem-gc)
+;; (solve gc)

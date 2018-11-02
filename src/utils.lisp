@@ -46,20 +46,9 @@
 (defun make-buffer (&optional (capacity 64))
   (make-array capacity :element-type 'character :adjustable t :fill-pointer 0))
 
-(defun round-to (number precision)
-  "Round `number` to the given `precision`.
-
-  Examples:
-
-    (round-to 13 10)      ; => 10
-    (round-to 15 10)      ; => 20
-    (round-to 44 25)      ; => 50
-    (round-to 457/87 1/2) ; => 11/2
-
-  "
-  (* precision (round number precision)))
-
 (defun hamming (sequence1 sequence2 &key (test #'eql))
+  "Return the Hamming distance between `sequence1` and `sequence2`."
+  ;; todo assert length=?
   (let ((result 0))
     (map nil (lambda (x y)
                (unless (funcall test x y)
@@ -124,6 +113,6 @@
   (with-open-file (input (problem-data-path problem))
     (pbcopy (funcall problem input))))
 
-(defmacro solve (problem)
-  `(solve% ',problem))
+(defmacro solve (name)
+  `(solve% ',(symb 'problem- name)))
 

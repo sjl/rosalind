@@ -17,4 +17,4 @@ CATCGTAATGACGGCCT")
   (hamming (read-line data) (read-line data) :test #'char=))
 
 ;; (problem-hamm *input-hamm*)
-;; (solve problem-hamm)
+;; (solve hamm)
