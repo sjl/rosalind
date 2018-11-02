@@ -23,5 +23,9 @@
                (:file "package")
                (:module "src" :serial t
                 :components ((:file "utils")
-                             (:file "problems")))))
+                             (:module "problems"
+                              :components ((:file "dna")
+                                           (:file "rna")
+                                           (:file "revc")
+                                           (:file "gc")))))))
 
