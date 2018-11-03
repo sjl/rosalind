@@ -231,16 +231,20 @@
 
 ;;;; Problems -----------------------------------------------------------------
 (defmacro define-problem (name (arg type) sample-input sample-output &body body)
-  (let ((symbol (symb 'problem- name)))
-    `(progn
-       (defun ,symbol (&optional (,arg ,sample-input))
-         (setf ,arg ,(ecase type
-                       (string `(ensure-string ,arg))
-                       (stream `(ensure-stream ,arg))))
-         (aesthetic-string (progn ,@body)))
-       (setf (get ',symbol 'rosalind-name) ,(string-downcase name))
-       (define-test ,symbol ,sample-input ,sample-output)
-       ',symbol)))
+  (multiple-value-bind (body declarations docstring)
+      (alexandria:parse-body body :documentation t)
+    (let ((symbol (symb 'problem- name)))
+      `(progn
+         (defun ,symbol (&optional (,arg ,sample-input))
+           ,@(when docstring (list docstring))
+           ,@declarations
+           (setf ,arg ,(ecase type
+                         (string `(ensure-string ,arg))
+                         (stream `(ensure-stream ,arg))))
+           (aesthetic-string (progn ,@body)))
+         (setf (get ',symbol 'rosalind-name) ,(string-downcase name))
+         (define-test ,symbol ,sample-input ,sample-output)
+         ',symbol))))
 
 (defun problem-data-path (problem)
   (format nil "~~/Downloads/rosalind_~A.txt" (get problem 'rosalind-name)))
