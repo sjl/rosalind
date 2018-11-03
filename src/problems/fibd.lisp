@@ -19,19 +19,10 @@
 (define-problem fibd (data stream)
     "6 3"
     "4"
-  (iterate
+  (iter
     (with months = (read data))
     (with lifespan = (read data))
-
-    (with population = (make-array 16 :adjustable t :fill-pointer 1 :initial-element nil))
-    (with births = (make-array 16 :adjustable t :fill-pointer 1 :initial-element nil))
-
-    ;; the hand of god reaches down and creates a baby rabbit from the dust
-    (initially (vector-push-extend 1 population)
-               (vector-push-extend 1 births))
-
     (for month :from 2 :to months)
-
     (labels ((ref (array index)
                (if (plusp index)
                  (aref array index)
@@ -46,8 +37,14 @@
              (population (month)
                (+ (breeding month)
                   (births month))))
-      (vector-push-extend (returning-final (population month)) population)
-      (vector-push-extend (births month) births))))
+      ;; We initialize the buffers with NIL in index 0 for the 1-based months,
+      ;; and 1 in index 0 for the initial pair of rabbits.
+      (buffering (returning-final (population month))
+                 :into population
+                 :initial-contents '(nil 1))
+      (buffering (births month)
+                 :into births
+                 :initial-contents '(nil 1)))))
 
-;; (problem-fibd "6 3")
+(problem-fibd "45 6")
 ;; (solve fibd)

@@ -33,19 +33,6 @@
     (stream (alexandria:read-stream-content-into-string input))
     (string (copy-seq input))))
 
-(defun nconcatenate (v1 v2)
-  (let* ((l1 (length v1))
-         (l2 (length v2))
-         (needed (+ l1 l2)))
-    (when (< (array-total-size v1) needed)
-      (adjust-array v1 (max needed (* l1 2))))
-    (setf (fill-pointer v1) needed)
-    (replace v1 v2 :start1 l1)
-    (values)))
-
-(defun make-buffer (&optional (capacity 64))
-  (make-array capacity :element-type 'character :adjustable t :fill-pointer 0))
-
 (defun hamming (sequence1 sequence2 &key (test #'eql))
   "Return the Hamming distance between `sequence1` and `sequence2`."
   ;; todo assert length=?
@@ -66,7 +53,6 @@
   (gathering (alexandria:map-permutations #'gather items)))
 
 
-;;;; Iterate ------------------------------------------------------------------
 (defmacro-driver (FOR var SEED seed THEN then)
   "Bind `var` to `seed` initially, then to `then` on every iteration.
 
@@ -92,7 +78,7 @@
        (,kwd ,var :next ,then)
        (initially (setf ,var ,seed)))))
 
-(defmacro returning-final (form)
+(defmacro-clause (RETURNING-FINAL form)
   "Evaluate `form` each iteration and return its final value from the `iterate`.
 
   Example:
@@ -114,6 +100,50 @@
        (with ,result)
        (finally (return ,result))
        (setf ,result ,form))))
+
+
+;;;; Buffers ------------------------------------------------------------------
+(defun make-buffer (&key initial-contents
+                         (element-type t)
+                         (initial-capacity (max 64 (length initial-contents))))
+  (let ((buffer (make-array initial-capacity
+                  :element-type element-type
+                  :adjustable t
+                  :fill-pointer (length initial-contents))))
+    (when initial-contents
+      (replace buffer initial-contents))
+    buffer))
+
+(defun make-string-buffer
+    (&key initial-contents
+          (initial-capacity (max 64 (length initial-contents))))
+  (make-buffer :initial-contents initial-contents
+               :initial-capacity initial-capacity
+               :element-type 'character))
+
+(defun buffer-push (buffer element)
+  (vector-push-extend element buffer)
+  element)
+
+(defun buffer-append (buffer sequence)
+  (let* ((l1 (length buffer))
+         (l2 (length sequence))
+         (needed (+ l1 l2)))
+    (when (< (array-total-size buffer) needed)
+      (adjust-array buffer (max needed (* l1 2))))
+    (setf (fill-pointer buffer) needed)
+    (replace buffer sequence :start1 l1)
+    sequence))
+
+(defmacro-clause (BUFFERING expr &optional
+                  APPEND (append nil)
+                  INTO (var iterate::*result-var*)
+                  INITIAL-CONTENTS (initial-contents '())
+                  ELEMENT-TYPE (element-type t))
+  `(progn
+     (with ,var = (make-buffer :initial-contents ,initial-contents
+                               :element-type ,element-type))
+     (,(if append 'buffer-append 'buffer-push) ,var ,expr)))
 
 
 ;;;; Translation --------------------------------------------------------------
@@ -183,29 +213,68 @@
 
 
 ;;;; File Formats -------------------------------------------------------------
+(defun read-fasta (stream)
+  "Read and return the next FASTA label/data pair from `stream`.
+
+  `(values label data)` will be returned for each label/data pair.  All the
+  lines of FASTA data for a given label will be concatenated and returned as
+  a single buffer.
+
+  `(values nil nil)` will be returned if there is no remaining data.
+
+  "
+  (iterate
+    (with label = nil)
+    (case (peek-char nil stream nil :eof)
+      (:eof (finish))
+      (#\Newline (read-char stream))
+      (#\> (if label
+             (finish)
+             (setf label (subseq (read-line stream) 1))))
+      (t (buffering (read-line stream) :into data
+                    :append t
+                    :element-type 'character)))
+    (finally (return (values label data)))))
+
 (defmacro-driver (FOR vars IN-FASTA source)
-  (nest
-    (destructuring-bind (label line) vars)
-    (with-gensyms (stream l))
-    (let ((kwd (if generate 'generate 'for))))
-    `(progn
-       (with ,label = nil)
-       (with ,stream = (ensure-stream ,source))
-       (,kwd ,line :do-next
-        (labels ((labelp (line)
-                   (char= #\> (aref line 0)))
-                 (parse-next ()
-                   (let ((,l (read-line ,stream nil nil nil)))
-                     (cond
-                       ((null ,l) (terminate))
-                       ((zerop (length ,l)) (parse-next))
-                       ((labelp ,l) (progn (setf ,label (subseq ,l 1)
-                                                 ,line (make-buffer))
-                                           (parse-next)))
-                       (t (progn (nconcatenate ,line ,l)
-                                 (unless (char= #\> (peek-char nil ,stream nil #\>)) ; yuck
-                                   (parse-next))))))))
-          (parse-next))))))
+  "Iterate over label/data pairs from the FASTA data in `source`.
+
+  `vars` must be a list of two symbols that will be bound to the label and data,
+  respectively, on each iteration.
+
+  `stream` can be either a string or a character input stream.
+
+  `generate` is supported.
+
+  Example:
+
+    (iterate
+      (with data = (remove #\\space \">foo
+                                    CATG
+                                    GGAA
+                                    >bar
+                                    CCCTTG
+                                    >baz
+                                    >frob\"))
+      (for (label dna) :in-fasta data)
+      (collect (list label dna)))
+    ; =>
+    ((\"foo\" \"CATGGGAA\")
+     (\"bar\" \"CCCTTG\")
+     (\"baz\" \"\")
+     (\"frob\" \"\"))
+
+  "
+  (destructuring-bind (label data) vars
+    (with-gensyms (stream)
+      (let ((kwd (if generate 'generate 'for)))
+        `(progn
+           (with ,stream = (ensure-stream ,source))
+           (,kwd (values ,label ,data) :next (multiple-value-bind (l d)
+                                                 (read-fasta ,stream)
+                                               (if l
+                                                 (values l d)
+                                                 (terminate)))))))))
 
 
 ;;;; Testing ------------------------------------------------------------------

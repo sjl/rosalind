@@ -36,7 +36,7 @@
 
 (define-problem iev (data stream)
     "1 0 0 1 0 1"
-    "3.5"
+    "3.5000"
   (let* ((dd (read data))
          (dh (read data))
          (dr (read data))

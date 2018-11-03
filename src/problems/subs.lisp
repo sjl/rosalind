@@ -39,5 +39,5 @@ ATAT")
       (finally (return (str:join " " result))))))
 
 ;; (problem-subs)
-(solve subs)
+;; (solve subs)
 
