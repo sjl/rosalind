@@ -37,5 +37,6 @@
                                            (:file "subs")
                                            (:file "iprb")
                                            (:file "iev")
-                                           (:file "fibd")))))))
+                                           (:file "fibd")
+                                           (:file "cons")))))))
 
