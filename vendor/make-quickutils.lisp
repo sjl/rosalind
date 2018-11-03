@@ -8,6 +8,7 @@
                :curry
                :rcurry
                :with-gensyms
+               :once-only
                :symb
 
                )

@@ -11,9 +11,10 @@
   :depends-on (
 
                :1am
+               :alexandria
                :iterate
                :losh
-               :alexandria
+               :str
 
                )
 
@@ -29,5 +30,12 @@
                                            (:file "rna")
                                            (:file "revc")
                                            (:file "gc")
-                                           (:file "hamm")))))))
+                                           (:file "hamm")
+                                           (:file "prot")
+                                           (:file "perm")
+                                           (:file "fib")
+                                           (:file "subs")
+                                           (:file "iprb")
+                                           (:file "iev")
+                                           (:file "fibd")))))))
 

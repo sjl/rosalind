@@ -21,4 +21,4 @@
             (gethash #\G results 0)
             (gethash #\T results 0))))
 
-(problem-dna "AT")
+;; (problem-dna "AT")

@@ -2,7 +2,7 @@
 ;;;; See http://quickutil.org for details.
 
 ;;;; To regenerate:
-;;;; (qtlc:save-utils-as "quickutils.lisp" :utilities '(:COMPOSE :CURRY :RCURRY :WITH-GENSYMS :SYMB) :ensure-package T :package "ROSALIND.QUICKUTILS")
+;;;; (qtlc:save-utils-as "quickutils.lisp" :utilities '(:COMPOSE :CURRY :RCURRY :WITH-GENSYMS :ONCE-ONLY :SYMB) :ensure-package T :package "ROSALIND.QUICKUTILS")
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (unless (find-package "ROSALIND.QUICKUTILS")
@@ -16,7 +16,7 @@
   (setf *utilities* (union *utilities* '(:MAKE-GENSYM-LIST :ENSURE-FUNCTION
                                          :COMPOSE :CURRY :RCURRY
                                          :STRING-DESIGNATOR :WITH-GENSYMS
-                                         :MKSTR :SYMB))))
+                                         :ONCE-ONLY :MKSTR :SYMB))))
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defun make-gensym-list (length &optional (x "G"))
     "Returns a list of `length` gensyms, each generated as if with a call to `make-gensym`,
@@ -144,6 +144,45 @@ unique symbol the named variable will be bound to."
     `(with-gensyms ,names ,@forms))
   
 
+  (defmacro once-only (specs &body forms)
+    "Evaluates `forms` with symbols specified in `specs` rebound to temporary
+variables, ensuring that each initform is evaluated only once.
+
+Each of `specs` must either be a symbol naming the variable to be rebound, or of
+the form:
+
+    (symbol initform)
+
+Bare symbols in `specs` are equivalent to
+
+    (symbol symbol)
+
+Example:
+
+    (defmacro cons1 (x) (once-only (x) `(cons ,x ,x)))
+      (let ((y 0)) (cons1 (incf y))) => (1 . 1)"
+    (let ((gensyms (make-gensym-list (length specs) "ONCE-ONLY"))
+          (names-and-forms (mapcar (lambda (spec)
+                                     (etypecase spec
+                                       (list
+                                        (destructuring-bind (name form) spec
+                                          (cons name form)))
+                                       (symbol
+                                        (cons spec spec))))
+                                   specs)))
+      ;; bind in user-macro
+      `(let ,(mapcar (lambda (g n) (list g `(gensym ,(string (car n)))))
+              gensyms names-and-forms)
+         ;; bind in final expansion
+         `(let (,,@(mapcar (lambda (g n)
+                             ``(,,g ,,(cdr n)))
+                           gensyms names-and-forms))
+            ;; bind in user-macro
+            ,(let ,(mapcar (lambda (n g) (list (car n) g))
+                    names-and-forms gensyms)
+               ,@forms)))))
+  
+
   (defun mkstr (&rest args)
     "Receives any number of objects (string, symbol, keyword, char, number), extracts all printed representations, and concatenates them all into one string.
 
@@ -161,6 +200,6 @@ See also: `symbolicate`"
     (values (intern (apply #'mkstr args))))
   
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (export '(compose curry rcurry with-gensyms with-unique-names symb)))
+  (export '(compose curry rcurry with-gensyms with-unique-names once-only symb)))
 
 ;;;; END OF quickutils.lisp ;;;;
