@@ -40,5 +40,6 @@
                                            (:file "iev")
                                            (:file "fibd")
                                            (:file "cons")
-                                           (:file "grph")))))))
+                                           (:file "grph")
+                                           (:file "prtm")))))))
 

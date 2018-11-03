@@ -17,6 +17,21 @@ Rosalind_2391 Rosalind_2323
 ")
 
 
+(defun strings-overlap-p (k left right)
+  "Return whether `left` and `right` overlap (in order) by exactly `k` characters.
+
+    (strings-overlap-p 3 \"abcdef\"
+                            \"defhi\") ; => T
+
+    (strings-overlap-p 2 \"abcdef\"
+                             \"defhi\") ; => NIL
+
+  "
+  (string= left right
+           :start1 (- (length left) k)
+           :end2 k))
+
+
 (define-problem grph (data stream)
     *input-grph*
     *output-grph*
