@@ -12,6 +12,7 @@
 
                :1am
                :alexandria
+               :cl-digraph
                :iterate
                :losh
                :str
@@ -38,5 +39,6 @@
                                            (:file "iprb")
                                            (:file "iev")
                                            (:file "fibd")
-                                           (:file "cons")))))))
+                                           (:file "cons")
+                                           (:file "grph")))))))
 

@@ -53,6 +53,20 @@
   (gathering (alexandria:map-permutations #'gather items)))
 
 
+(defun strings-overlap-p (k left right)
+  "Return whether `left` and `right` overlap (in order) by exactly `k` characters.
+
+    (strings-overlap-p 3 \"abcdef\"
+                            \"defhi\") ; => T
+
+    (strings-overlap-p 2 \"abcdef\"
+                             \"defhi\") ; => NIL
+
+  "
+  (string= left right
+           :start1 (- (length left) k)
+           :end2 k))
+
 (defmacro-driver (FOR var SEED seed THEN then)
   "Bind `var` to `seed` initially, then to `then` on every iteration.
 
@@ -275,6 +289,11 @@
                                                (if l
                                                  (values l d)
                                                  (terminate)))))))))
+
+(defun read-fasta-into-hash-table (source)
+  "Return everything in the FASTA `source` as a hash table of labels to data."
+  (iterate (for (label data) :in-fasta source)
+           (collect-hash (label data) :test #'equal)))
 
 
 ;;;; Testing ------------------------------------------------------------------

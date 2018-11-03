@@ -74,12 +74,12 @@ T: 1 5 0 0 0 1 1 6
 
     (if-first-time
       (setf length (length dna)
-            result (make-profile-matrix length))
+            result (make-profile-matrix% length))
       (assert (= length (length dna)) ()
         "The ~:R DNA string in the supplied FASTA data has ~D bases (expected ~D)."
         n (length dna) length))
 
-    (pmincf profile-matrix dna)
+    (pmincf result dna)
 
     (finally (return result))))
 
