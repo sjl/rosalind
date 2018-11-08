@@ -223,7 +223,7 @@
 ;;;; Testing ------------------------------------------------------------------
 (defmacro define-test (problem input output &optional (test 'string=))
   `(test ,(symb 'test- problem)
-     (is (,test ,output (,problem ,input)))))
+     (is (,test ,output (aesthetic-string (,problem ,input))))))
 
 (defun run-tests ()
   (1am:run))
@@ -241,7 +241,7 @@
            (setf ,arg ,(ecase type
                          (string `(ensure-string ,arg))
                          (stream `(ensure-stream ,arg))))
-           (aesthetic-string (progn ,@body)))
+           (progn ,@body))
          (setf (get ',symbol 'rosalind-name) ,(string-downcase name))
          (define-test ,symbol ,sample-input ,sample-output)
          ',symbol))))
@@ -251,7 +251,7 @@
 
 (defun solve% (problem)
   (with-open-file (input (problem-data-path problem))
-    (pbcopy (funcall problem input))))
+    (pbcopy (aesthetic-string (funcall problem input)))))
 
 (defmacro solve (name)
   `(solve% ',(symb 'problem- name)))

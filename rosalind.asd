@@ -41,5 +41,6 @@
                                            (:file "fibd")
                                            (:file "cons")
                                            (:file "grph")
-                                           (:file "prtm")))))))
+                                           (:file "prtm")
+                                           (:file "lcsm")))))))
 
