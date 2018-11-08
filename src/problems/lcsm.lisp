@@ -71,8 +71,7 @@ ATACA")
 (define-problem lcsm (data stream)
     *input-lcsm*
     "AC"
-  (let ((lines (iterate (for (nil line) :in-fasta data)
-                        (collect line))))
+  (let ((lines (mapcar #'cdr (read-fasta-into-alist data))))
     (-<> (reduce #'longest-common-substrings-of-any (rest lines)
                  :initial-value (list (first lines)))
       (sort <> #'string<) ; tests
