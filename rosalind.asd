@@ -42,5 +42,7 @@
                                            (:file "cons")
                                            (:file "grph")
                                            (:file "prtm")
+                                           (:file "mrna")
+                                           (:file "splc")
                                            (:file "lcsm")))))))
 

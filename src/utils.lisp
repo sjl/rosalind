@@ -219,6 +219,11 @@
   (iterate (for (label data) :in-fasta source)
            (collect-hash (label data) :test #'equal)))
 
+(defun read-fasta-into-alist (source)
+  "Return everything in the FASTA `source` as an alist of labels to data."
+  (iterate (for (label data) :in-fasta source)
+           (collect (cons label data))))
+
 
 ;;;; Testing ------------------------------------------------------------------
 (defmacro define-test (problem input output &optional (test 'string=))
