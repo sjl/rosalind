@@ -28,7 +28,7 @@
 ;; polarized ends, with one end being called 3′ and the other being 5′, but I'm
 ;; not 100% sure.
 
-(defun reverse-complement (dna)
+(defun nreverse-complement (dna)
   (flet ((dna-complement (base)
            (case base
              (#\A #\T)
@@ -38,9 +38,12 @@
     (map-into dna #'dna-complement dna)
     (nreverse dna)))
 
+(defun reverse-complement (dna)
+  (nreverse-complement (copy-seq dna)))
+
 (define-problem revc (data string)
     "AAAACCCGGT"
     "ACCGGGTTTT"
   "Return the reverse complement of `data`."
-  (reverse-complement (delete #\newline data)))
+  (nreverse-complement (delete #\newline data)))
 

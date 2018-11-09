@@ -58,11 +58,29 @@
     ("UGG" #\W) ("CGG" #\R) ("AGG" #\R) ("GGG" #\G)))
 
 (defun translate (rna &key (start 0))
-  "Translate a string of RNA bases into a protein string of amino acids."
-  (iterate (for i :from (search "AUG" rna :start2 start) :by 3)
-           (for protein = (codon-to-protein rna i))
-           (while protein)
-           (collect protein :result-type 'string)))
+  "Translate a string of RNA bases into a protein string of amino acids.
+
+  `rna` will be searched (beginning at `start`) for a start codon and
+  translation will proceed from there.  If no start codon occurs after `start`
+  then `nil` will be returned.
+
+  Once a start codon has been found, translation proceeds to the next stop
+  codon.  If no stop codon is present, `nil` will be returned.
+
+  Otherwise two values are returned: the protein string and the index into `rna`
+  where it started.
+
+  "
+  (when-let ((start (search "AUG" rna :start2 start)))
+    (values
+      (iterate (with limit = (- (length rna) 3))
+               (for i :from start :by 3)
+               (when (> i limit)
+                 (return-from translate (values nil nil)))
+               (for protein = (codon-to-protein rna i))
+               (while protein)
+               (collect protein :result-type 'string))
+      start)))
 
 
 (define-problem prot (data string)

@@ -1,5 +1,10 @@
 (in-package :rosalind)
 
+;; This was pretty simple, except for discovering that cl-ppcre's all-matches
+;; function skips overlapping matches.  Otherwise we just convert the motif to
+;; a regex and handle grabbing the data from Uniprot (which is straightforward
+;; but can be slow).
+
 (defparameter *input-mprt*
   "A2Z669
 B5ZC00
