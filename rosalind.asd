@@ -13,6 +13,8 @@
                :1am
                :alexandria
                :cl-digraph
+               :cl-ppcre
+               :drakma
                :iterate
                :losh
                :str

@@ -225,6 +225,27 @@
            (collect (cons label data))))
 
 
+;;;; Uniprot ------------------------------------------------------------------
+(defvar *uniprot-cache* (make-hash-table :test #'equal))
+
+(defmacro get-cached (key cache expr)
+  (once-only (key cache)
+    (with-gensyms (value)
+      `(if-found (,value (gethash ,key ,cache))
+         ,value
+         (setf (gethash ,key ,cache) ,expr)))))
+
+(defun uniprot-url (id)
+  (format nil "http://www.uniprot.org/uniprot/~A.fasta" id))
+
+(defun uniprot (id)
+  (get-cached id *uniprot-cache*
+              (-<> (uniprot-url id)
+                drakma:http-request
+                read-fasta-into-alist
+                first)))
+
+
 ;;;; Testing ------------------------------------------------------------------
 (defmacro define-test (problem input output &optional (test 'string=))
   `(test ,(symb 'test- problem)

@@ -6,10 +6,11 @@
 
                :compose
                :curry
-               :rcurry
-               :with-gensyms
+               :ensure-gethash
                :once-only
+               :rcurry
                :symb
+               :with-gensyms
 
                )
   :package "ROSALIND.QUICKUTILS")
