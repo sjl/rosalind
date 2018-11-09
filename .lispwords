@@ -1,3 +1,5 @@
 (1 codon-case)
 (1 labels-memoized)
 (4 define-problem)
+(1 do-sum Σ)
+(1 do-product Π)
