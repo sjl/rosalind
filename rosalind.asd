@@ -49,6 +49,7 @@
                                            (:file "prot")
                                            (:file "prtm")
                                            (:file "revc")
+                                           (:file "revp")
                                            (:file "rna")
                                            (:file "splc")
                                            (:file "subs")

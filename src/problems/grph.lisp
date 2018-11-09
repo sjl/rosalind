@@ -1,6 +1,7 @@
 (in-package :rosalind)
 
-(defparameter *input-grph* ">Rosalind_0498
+(defparameter *input-grph*
+  ">Rosalind_0498
 AAATAAA
 >Rosalind_2391
 AAATTTT
@@ -11,8 +12,9 @@ AAATCCC
 >Rosalind_5013
 GGGTGGG")
 
-(defparameter *output-grph* "Rosalind_0498 Rosalind_2391
-Rosalind_0498 Rosalind_0442
+(defparameter *output-grph*
+  "Rosalind_0498 Rosalind_0442
+Rosalind_0498 Rosalind_2391
 Rosalind_2391 Rosalind_2323
 ")
 
@@ -48,9 +50,10 @@ Rosalind_2391 Rosalind_2323
              data)
     ;; (ql:quickload :cl-digraph.dot)
     ;; (digraph.dot:draw graph)
-    (with-output-to-string (s)
-      (iterate (for (l . r) :in (digraph:edges graph))
-               (format s "~A ~A~%" l r)))))
+    (-<> (iterate (for (l . r) :in (digraph:edges graph))
+                  (collect (format nil "~A ~A~%" l r)))
+      (sort <> #'string<)
+      (str:join nil <>))))
 
 
 
