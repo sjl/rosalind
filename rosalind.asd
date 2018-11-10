@@ -41,6 +41,7 @@
                                            (:file "iev")
                                            (:file "iprb")
                                            (:file "lcsm")
+                                           (:file "lexf")
                                            (:file "lia")
                                            (:file "mprt")
                                            (:file "mrna")
