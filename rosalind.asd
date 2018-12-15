@@ -1,3 +1,14 @@
+(defclass auto-module (module) ())
+
+(defmethod component-children ((self auto-module))
+  (mapcar (lambda (p) (make-instance 'cl-source-file :type "lisp"
+                        :pathname p
+                        :name (pathname-name p)
+                        :parent (component-parent self)))
+          (directory-files (component-pathname self)
+                           (make-pathname :directory nil :name *wild* :type "lisp"))))
+
+
 (asdf:defsystem :rosalind
   :name "rosalind"
   :description "Rosalind solutions."
@@ -26,23 +37,4 @@
                (:file "package")
                (:module "src" :serial t
                 :components ((:file "utils")
-                             (:module "problems"
-                              :components ((:file "dna")
-                                           (:file "rna")
-                                           (:file "revc")
-                                           (:file "gc")
-                                           (:file "hamm")
-                                           (:file "prot")
-                                           (:file "perm")
-                                           (:file "fib")
-                                           (:file "subs")
-                                           (:file "iprb")
-                                           (:file "iev")
-                                           (:file "fibd")
-                                           (:file "cons")
-                                           (:file "grph")
-                                           (:file "prtm")
-                                           (:file "mrna")
-                                           (:file "splc")
-                                           (:file "lcsm")))))))
-
+                             (:auto-module "problems")))))
