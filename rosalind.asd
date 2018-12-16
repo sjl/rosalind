@@ -1,3 +1,14 @@
+(defclass auto-module (module) ())
+
+(defmethod component-children ((self auto-module))
+  (mapcar (lambda (p) (make-instance 'cl-source-file :type "lisp"
+                        :pathname p
+                        :name (pathname-name p)
+                        :parent (component-parent self)))
+          (directory-files (component-pathname self)
+                           (make-pathname :directory nil :name *wild* :type "lisp"))))
+
+
 (asdf:defsystem :rosalind
   :name "rosalind"
   :description "Rosalind solutions."
@@ -28,33 +39,4 @@
                (:file "package")
                (:module "src" :serial t
                 :components ((:file "utils")
-                             (:module "problems"
-                              :components (
-
-                                           (:file "cons")
-                                           (:file "dna")
-                                           (:file "fib")
-                                           (:file "fibd")
-                                           (:file "gc")
-                                           (:file "grph")
-                                           (:file "hamm")
-                                           (:file "iev")
-                                           (:file "iprb")
-                                           (:file "lcsm")
-                                           (:file "lexf")
-                                           (:file "lgis")
-                                           (:file "lia")
-                                           (:file "mprt")
-                                           (:file "mrna")
-                                           (:file "orf")
-                                           (:file "perm")
-                                           (:file "prot")
-                                           (:file "prtm")
-                                           (:file "revc")
-                                           (:file "revp")
-                                           (:file "rna")
-                                           (:file "splc")
-                                           (:file "subs")
-
-                                           ))))))
-
+                             (:auto-module "problems")))))
