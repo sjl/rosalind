@@ -90,7 +90,7 @@
   "
   (let* ((sequence (coerce sequence 'vector))
          (n (length sequence))
-         (tail-indexes (make-array (1+ n) :fill-pointer 1))
+         (tail-indexes (make-array (1+ n) :fill-pointer 1 :initial-element nil))
          (predecessors (make-array n :fill-pointer 0)))
     (coerce
       (if (zerop n)
