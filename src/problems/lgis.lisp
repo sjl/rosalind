@@ -71,7 +71,7 @@
 
   `predicate` must be a comparison predicate like `<` or `>=`.
 
-  If there are multiple longest sequences, an arbitrary one is returned
+  If there are multiple longest sequences, an arbitrary one is returned.
 
   Examples:
 
