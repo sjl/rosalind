@@ -56,6 +56,45 @@
   (gathering (alexandria:map-permutations #'gather items)))
 
 
+(defun dna-complement (base)
+  (ecase base
+    (#\A #\T)
+    (#\T #\A)
+    (#\G #\C)
+    (#\C #\G)))
+
+(defun rna-complement (base)
+  (ecase base
+    (#\A #\U)
+    (#\U #\A)
+    (#\G #\C)
+    (#\C #\G)))
+
+
+(defun rings (base)
+  "Return the number of rings in the structure of `base`.
+
+  Pyrimidines (cytosine, thymine, and uracil) have a single-ring structure.
+
+  Purines (adenine and guanine) have a double-ring structure.
+
+  "
+  (ecase base
+    ((#\A #\G) 2)
+    ((#\C #\T #\U) 1)))
+
+
+(defun mapcount (predicate sequence &rest more-sequences)
+  "Map `predicate` across sequences, counting satisfactory applications."
+  (let ((result 0))
+    (apply #'map nil
+           (lambda (&rest args)
+             (when (apply predicate args)
+               (incf result)))
+           sequence more-sequences)
+    result))
+
+
 ;;;; Iterate ------------------------------------------------------------------
 (defmacro-driver (FOR var SEED seed THEN then)
   "Bind `var` to `seed` initially, then to `then` on every iteration.

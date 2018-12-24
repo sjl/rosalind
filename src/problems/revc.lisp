@@ -29,14 +29,8 @@
 ;; not 100% sure.
 
 (defun nreverse-complement (dna)
-  (flet ((dna-complement (base)
-           (case base
-             (#\A #\T)
-             (#\T #\A)
-             (#\G #\C)
-             (#\C #\G))))
-    (map-into dna #'dna-complement dna)
-    (nreverse dna)))
+  (map-into dna #'dna-complement dna)
+  (nreverse dna))
 
 (defun reverse-complement (dna)
   (nreverse-complement (copy-seq dna)))
