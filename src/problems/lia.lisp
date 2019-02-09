@@ -14,61 +14,6 @@
 ;; Because A's and B's are independent, this means there's a 1/2 * 1/2 = 1/4
 ;; chance of any given child being Aa Bb.
 
-(defmacro do-sum ((var from to) &body body)
-  "Sum `body` with `var` iterating over `[from, to]`.
-
-  It's just Σ:
-
-      to
-      ===
-      \
-       >   body
-      /
-      ===
-      n = from
-
-  "
-  (once-only (to)
-    (with-gensyms (result)
-      `(do ((,var ,from (1+ ,var))
-            (,result 0))
-         ((> ,var ,to) ,result)
-         (incf ,result (progn ,@body))))))
-
-(defmacro do-product ((var from to) &body body)
-  "Multiply `body` with `var` iterating over `[from, to]`.
-
-  It's just Π:
-
-       to
-      =====
-       | |
-       | |  body
-       | |
-      n = from
-
-  "
-  (once-only (to)
-    (with-gensyms (result)
-      `(do ((,var ,from (1+ ,var))
-            (,result 1))
-         ((> ,var ,to) ,result)
-         (setf ,result (* ,result (progn ,@body)))))))
-
-
-(defmacro Σ (bindings &body body) ;; lol
-  `(do-sum ,bindings ,@body))
-
-(defmacro Π (bindings &body body) ;; lol
-  `(do-product ,bindings ,@body))
-
-
-(defun binomial-coefficient (n k)
-  "Return `n` choose `k`."
-  ;; https://en.wikipedia.org/wiki/Binomial_coefficient#Multiplicative_formula
-  (Π (i 1 k)
-    (/ (- (1+ n) i) i)))
-
 (defun bernoulli-exactly (successes trials success-probability)
   "Return the probability of exactly `successes` in `trials` Bernoulli trials.
 
