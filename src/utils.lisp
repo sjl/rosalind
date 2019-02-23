@@ -84,6 +84,18 @@
     ((#\C #\T #\U) 1)))
 
 
+(defun-inline gcp (base)
+  "Return whether `base` is G or C."
+  (or (char= #\G base)
+      (char= #\C base)))
+
+(defun-inline base-probability (gc-content base)
+  "Return the probability of `base` in DNA with the given `gc-content`."
+  (if (gcp base)
+    (/ gc-content 2)
+    (/ (- 1 gc-content) 2)))
+
+
 (defun mapcount (predicate sequence &rest more-sequences)
   "Map `predicate` across sequences, counting satisfactory applications."
   (let ((result 0))

@@ -13,17 +13,8 @@
     *output-prob*
   (let ((dna (read-line data))
         (gc-contents (read-all-from-string (read-line data))))
-    (labels
-        ((gcp (base)
-           "Return whether `base` is G or C."
-           (or (char= #\G base)
-               (char= #\C base)))
-         (base-probability (gc-content base)
-           "Return the probability of `base` in DNA with the given `gc-content`."
-           (if (gcp base)
-             (/ gc-content 2)
-             (/ (- 1 gc-content) 2)))
-         (prob (gc-content)
+    (flet
+        ((prob (gc-content)
            (iterate
              (for base :in-string dna)
              (summing (log (base-probability gc-content base) 10)))))
