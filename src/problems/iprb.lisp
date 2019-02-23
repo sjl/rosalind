@@ -24,13 +24,14 @@
              ;;          = 2XY/N²-N
              (/ (* 2 x y)
                 (- (* n n) n))))
-      (format nil "~,5F"
-              (+ (* (p-same d d) 1)      ;; AA AA
-                 (* (p-diff d h) 1)      ;; AA Aa
-                 (* (p-diff d r) 1)      ;; AA aa
-                 (* (p-same h h) 3/4)    ;; Aa Aa
-                 (* (p-diff h r) 1/2)    ;; Aa aa
-                 (* (p-same r r) 0)))))) ;; aa aa
+      (float-string
+        (+ (* (p-same d d) 1)      ;; AA AA
+           (* (p-diff d h) 1)      ;; AA Aa
+           (* (p-diff d r) 1)      ;; AA aa
+           (* (p-same h h) 3/4)    ;; Aa Aa
+           (* (p-diff h r) 1/2)    ;; Aa aa
+           (* (p-same r r) 0))
+        5)))) ;; aa aa
 
 ;; (problem-iprb)
 ;; (solve iprb)

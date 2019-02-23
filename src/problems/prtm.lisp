@@ -36,6 +36,6 @@
   (-<> data
     (delete #\newline <>)
     (summation <> :key #'monoisotopic-mass)
-    (format nil "~,3F" <>)))
+    float-string))
 
 

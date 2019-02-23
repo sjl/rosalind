@@ -95,6 +95,10 @@
     (/ gc-content 2)
     (/ (- 1 gc-content) 2)))
 
+(defun sequence-probability (gc-content sequence)
+  "Return the probability of seeing `sequence` when generating a random sequence with the given `gc-content`."
+  (product sequence :key (curry #'base-probability gc-content)))
+
 
 (defun mapcount (predicate sequence &rest more-sequences)
   "Map `predicate` across sequences, counting satisfactory applications."
@@ -105,6 +109,12 @@
                (incf result)))
            sequence more-sequences)
     result))
+
+
+(defun ensure-list (value)
+  (if (listp value)
+    value
+    (list value)))
 
 
 ;;;; Math ---------------------------------------------------------------------
@@ -352,6 +362,13 @@
                 drakma:http-request
                 read-fasta-into-alist
                 first)))
+
+
+;;;; Output -------------------------------------------------------------------
+(defun float-string (float-or-floats &optional (precision 3))
+  (with-output-to-string (s)
+    (loop :for (float . more) :on (ensure-list float-or-floats)
+          :do (format s "~,VF~:[~; ~]" precision float more))))
 
 
 ;;;; Testing ------------------------------------------------------------------

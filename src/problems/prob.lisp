@@ -18,4 +18,4 @@
            (iterate
              (for base :in-string dna)
              (summing (log (base-probability gc-content base) 10)))))
-      (format nil "~{~,3F~^ ~}" (mapcar #'prob gc-contents)))))
+      (float-string (mapcar #'prob gc-contents)))))

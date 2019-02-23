@@ -9,14 +9,13 @@
          (hh (read data))
          (hr (read data))
          (rr (read data)))
-    (format nil "~,4F"
-            ;; It's just a weighted average…
-            (* 2 (+ (* dd 1)
-                    (* dh 1)
-                    (* dr 1)
-                    (* hh 3/4)
-                    (* hr 1/2)
-                    (* rr 0))))))
+    (float-string
+      ;; It's just a weighted average…
+      (* 2 (+ (* dd 1)
+              (* dh 1)
+              (* dr 1)
+              (* hh 3/4)
+              (* hr 1/2)
+              (* rr 0)))
+      4)))
 
-;; (problem-iev)
-;; (solve iev)

@@ -51,4 +51,4 @@
   (let* ((generations (read data))
          (target (read data))
          (population (expt 2 generations)))
-    (format nil "~,3F" (bernoulli-at-least target population 1/4))))
+    (float-string (bernoulli-at-least target population 1/4))))
