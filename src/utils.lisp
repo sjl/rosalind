@@ -34,6 +34,11 @@
     (stream (alexandria:read-stream-content-into-string input))
     (string (copy-seq input))))
 
+(defun ensure-list (value)
+  (if (listp value)
+    value
+    (list value)))
+
 
 (defun hamming (sequence1 sequence2 &key (test #'eql))
   "Return the Hamming distance between `sequence1` and `sequence2`."
@@ -110,11 +115,6 @@
            sequence more-sequences)
     result))
 
-
-(defun ensure-list (value)
-  (if (listp value)
-    value
-    (list value)))
 
 
 ;;;; Math ---------------------------------------------------------------------
