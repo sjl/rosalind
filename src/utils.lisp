@@ -298,7 +298,7 @@
   `vars` must be a list of two symbols that will be bound to the label and data,
   respectively, on each iteration.
 
-  `stream` can be either a string or a character input stream.
+  `source` can be either a string or a character input stream.
 
   `generate` is supported.
 
