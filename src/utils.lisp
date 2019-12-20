@@ -405,5 +405,7 @@
     (pbcopy (aesthetic-string (funcall problem input)))))
 
 (defmacro solve (name)
+  (assert (symbolp name) ()
+    "Usage: (solve foo)~%foo should not be quoted.")
   `(solve% ',(symb 'problem- name)))
 

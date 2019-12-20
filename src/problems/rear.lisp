@@ -60,6 +60,7 @@
                  (mapcar (curry #'str:split #\newline) <>)
                  (mapcar (curry #'mapcar #'read-all-from-string) <>)
                  (mapcar (curry #'mapcar (rcurry #'coerce 'vector)) <>))))
-    (iterate (for (from . to) :in pairs)
-             (collect (reversals-required from to))))
-  )
+    (iterate (for (from to) :in pairs)
+             (collect (time (reversals-required from to))))))
+
+

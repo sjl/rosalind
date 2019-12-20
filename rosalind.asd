@@ -24,6 +24,7 @@
                :1am
                :alexandria
                :cl-digraph
+               :cl-digraph.dot
                :cl-ppcre
                :drakma
                :iterate
