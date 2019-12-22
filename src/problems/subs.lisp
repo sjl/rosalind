@@ -17,6 +17,3 @@ ATAT")
       (collect (1+ pos) :into result)
       (finally (return (str:join " " result))))))
 
-;; (problem-subs)
-;; (solve subs)
-
