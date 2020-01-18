@@ -116,6 +116,15 @@
     result))
 
 
+;;;; Strings ------------------------------------------------------------------
+(defun string-empty-p (string)
+  (zerop (length string)))
+
+(defun first-char (string)
+  (if (string-empty-p string)
+    nil
+    (char string 0)))
+
 
 ;;;; Math ---------------------------------------------------------------------
 (defmacro do-sum ((var from to) &body body)
@@ -222,6 +231,13 @@
        (with ,result)
        (finally (return ,result))
        (setf ,result ,form))))
+
+
+;;;; Readers ------------------------------------------------------------------
+(defun read-lines (stream)
+  "Read all lines from `stream` and return them as a fresh list of strings."
+  (iterate (for line :in-stream stream :using #'read-line)
+           (collect line)))
 
 
 ;;;; Buffers ------------------------------------------------------------------

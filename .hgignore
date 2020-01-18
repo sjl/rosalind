@@ -2,4 +2,4 @@ syntax: glob
 
 scratch.lisp
 lisp.prof
-digraph.png
+*.png

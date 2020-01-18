@@ -52,15 +52,16 @@
     (dolist (r (reversals v :start start :end end))
       (enqueue (cons n r) remaining))))
 
-(define-problem rear (data string)
-    *input-rear*
-    *output-rear*
-  (let ((pairs (-<> data
-                 (str:split (format nil "~2%") <>)
-                 (mapcar (curry #'str:split #\newline) <>)
-                 (mapcar (curry #'mapcar #'read-all-from-string) <>)
-                 (mapcar (curry #'mapcar (rcurry #'coerce 'vector)) <>))))
-    (iterate (for (from to) :in pairs)
-             (collect (time (reversals-required from to))))))
+;; todo: finish this one
+;; (define-problem rear (data string)
+;;     *input-rear*
+;;     *output-rear*
+;;   (let ((pairs (-<> data
+;;                  (str:split (format nil "~2%") <>)
+;;                  (mapcar (curry #'str:split #\newline) <>)
+;;                  (mapcar (curry #'mapcar #'read-all-from-string) <>)
+;;                  (mapcar (curry #'mapcar (rcurry #'coerce 'vector)) <>))))
+;;     (iterate (for (from to) :in pairs)
+;;              (collect (time (reversals-required from to))))))
 
 
