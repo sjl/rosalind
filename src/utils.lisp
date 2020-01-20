@@ -283,6 +283,28 @@
        (finally (return ,result))
        (setf ,result ,form))))
 
+(defmacro-clause (SUMMING* form &optional INTO var MODULO divisor INITIAL-VALUE n)
+  "Like vanilla `summing`, but with more options."
+  (let ((result (or var iterate::*result-var*)))
+    (with-gensyms (mod)
+      `(progn
+         (with ,result = ,(or n 0))
+         ,@(if divisor
+             `((with ,mod = ,divisor)
+               (setf ,result (mod (+ ,result ,form) ,mod)))
+             `((incf ,result ,form)))))))
+
+(defmacro-clause (MULTIPLYING* form &optional INTO var MODULO divisor INITIAL-VALUE n)
+  "Like vanilla `multiplying`, but using `*` and with more options."
+  (let ((result (or var iterate::*result-var*)))
+    (with-gensyms (mod)
+      `(progn
+         (with ,result = ,(or n 1))
+         ,@(if divisor
+             `((with ,mod = ,divisor)
+               (setf ,result (mod (* ,result ,form) ,mod)))
+             `((setf ,result (* ,result ,form))))))))
+
 
 ;;;; Readers ------------------------------------------------------------------
 (defun read-lines (stream)
@@ -425,37 +447,49 @@
 
 
 ;;;; Output -------------------------------------------------------------------
-(defun float-string (float-or-floats &optional (precision 3))
+(defun float-string (float-or-floats &optional (places 3))
   "Return a string of `float-or-floats` in the format Rosalind wants.
 
   `float-or-floats` can be a number, list, vector, or 2D array.
 
-  Each float will be printed with `precision` digits after the decimal point.
+  Each float will be printed with `places` digits after the decimal point.
 
   If a list or vector is given, the floats will be separated by a space.
 
   If a two-dimensional array is given, the rows will be separated by newlines.
 
   "
-  (with-output-to-string (s)
-    (flet ((p (float &optional space)
-             (format s "~,VF~:[~; ~]" precision float space)))
-      (etypecase float-or-floats
-        ((or number list)
-         (loop :for (float . more) :on (alexandria:ensure-list float-or-floats)
-               :do (p float more)))
-        ((array * (*))
-         (loop :with last = (1- (length float-or-floats))
-               :for i :from 0
-               :for f :across float-or-floats
-               :do (p f (< i last))))
-        ((array * (* *))
-         (destructuring-bind (rows cols) (array-dimensions float-or-floats)
-           (dotimes (r rows)
-             (dotimes (c cols)
-               (p (aref float-or-floats r c) (< c (1- cols))))
-             (when (< r (1- rows))
-               (terpri s)))))))))
+  (let ((precision (expt 10.0d0 places)))
+    (with-output-to-string (s)
+      ;; Rosalind's examples use half-up style rounding.  I think their answer
+      ;; checking will tolerate half-even, but in order to get consistent test
+      ;; output we need consistent rounding.  Unfortunately format's ~F allows
+      ;; an implementation-specific rounding strategy, so we have to hack this
+      ;; in ourselves, and we may as well match Rosalind.  Sigh.
+      (labels ((round-half-up (float)
+                 (_ float
+                   (* _ precision)
+                   (+ _ 0.5d0)
+                   floor
+                   (/ _ precision)))
+               (p (float &optional space)
+                 (format s "~,VF~:[~; ~]" places (round-half-up float) space)))
+        (etypecase float-or-floats
+          ((or number list)
+           (loop :for (float . more) :on (alexandria:ensure-list float-or-floats)
+                 :do (p float more)))
+          ((array * (*))
+           (loop :with last = (1- (length float-or-floats))
+                 :for i :from 0
+                 :for f :across float-or-floats
+                 :do (p f (< i last))))
+          ((array * (* *))
+           (destructuring-bind (rows cols) (array-dimensions float-or-floats)
+             (dotimes (r rows)
+               (dotimes (c cols)
+                 (p (aref float-or-floats r c) (< c (1- cols))))
+               (when (< r (1- rows))
+                 (terpri s))))))))))
 
 
 ;;;; Testing ------------------------------------------------------------------

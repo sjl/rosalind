@@ -67,6 +67,13 @@ GAT")
 
 
 ;;;; Problem ------------------------------------------------------------------
+(defun sorted-children (node)
+  ;; Need this for deterministic test output.
+  (_ node
+    trie-node-children
+    alexandria:hash-table-alist
+    (sort _ #'string< :key #'car)))
+
 (defun trie-adjacency-list (root)
   (gathering
     (let ((i 0)
@@ -75,7 +82,7 @@ GAT")
                (alexandria:ensure-gethash node numbers (incf i))))
         (recursively ((node root))
           (iterate
-            (for (ch child) :in-hashtable (trie-node-children node))
+            (for (ch . child) :in (sorted-children node))
             (gather (list (n node) (n child) ch))
             (recur child)))))))
 

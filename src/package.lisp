@@ -31,7 +31,7 @@
 
     :Σ :Π :binomial-coefficient
 
-    :returning-final
+    :returning-final :summing* :multiplying*
 
     :read-lines
     :read-fasta
