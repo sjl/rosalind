@@ -389,7 +389,7 @@
 
 ;;;; Testing ------------------------------------------------------------------
 (defmacro define-test (problem input output &optional (test 'string=))
-  `(test ,(symb 'test- problem)
+  `(test ,(alexandria:symbolicate 'test- problem)
      (is (,test ,output (aesthetic-string (,problem ,input))))))
 
 (defun run-tests ()
@@ -400,7 +400,7 @@
 (defmacro define-problem (name (arg type) sample-input sample-output &body body)
   (multiple-value-bind (body declarations docstring)
       (alexandria:parse-body body :documentation t)
-    (let ((symbol (symb 'problem- name)))
+    (let ((symbol (alexandria:symbolicate 'problem- name)))
       `(progn
          (defun ,symbol (&optional (,arg ,sample-input))
            ,@(when docstring (list docstring))
@@ -423,5 +423,5 @@
 (defmacro solve (name)
   (assert (symbolp name) ()
     "Usage: (solve foo)~%foo should not be quoted.")
-  `(solve% ',(symb 'problem- name)))
+  `(solve% ',(alexandria:symbolicate 'problem- name)))
 

@@ -34,10 +34,7 @@
                )
 
   :serial t
-  :components ((:module "vendor" :serial t
-                :components ((:file "quickutils-package")
-                             (:file "quickutils")))
-               (:file "package")
-               (:module "src" :serial t
-                :components ((:file "utils")
+  :components ((:module "src" :serial t
+                :components ((:file "package")
+                             (:file "utils")
                              (:auto-module "problems")))))
