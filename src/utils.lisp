@@ -43,6 +43,18 @@
     result))
 
 
+(defun hamming (sequence1 sequence2 &key (test #'eql))
+  "Return the Hamming distance between `sequence1` and `sequence2`."
+  ;; todo assert length=?
+  (let ((result 0))
+    (map nil (lambda (x y)
+               (unless (funcall test x y)
+                 (incf result)))
+         sequence1
+         sequence2)
+    result))
+
+
 ;;;; Dogma --------------------------------------------------------------------
 (defun dna-complement (base)
   (ecase base
@@ -414,9 +426,36 @@
 
 ;;;; Output -------------------------------------------------------------------
 (defun float-string (float-or-floats &optional (precision 3))
+  "Return a string of `float-or-floats` in the format Rosalind wants.
+
+  `float-or-floats` can be a number, list, vector, or 2D array.
+
+  Each float will be printed with `precision` digits after the decimal point.
+
+  If a list or vector is given, the floats will be separated by a space.
+
+  If a two-dimensional array is given, the rows will be separated by newlines.
+
+  "
   (with-output-to-string (s)
-    (loop :for (float . more) :on (alexandria:ensure-list float-or-floats)
-          :do (format s "~,VF~:[~; ~]" precision float more))))
+    (flet ((p (float &optional space)
+             (format s "~,VF~:[~; ~]" precision float space)))
+      (etypecase float-or-floats
+        ((or number list)
+         (loop :for (float . more) :on (alexandria:ensure-list float-or-floats)
+               :do (p float more)))
+        ((array * (*))
+         (loop :with last = (1- (length float-or-floats))
+               :for i :from 0
+               :for f :across float-or-floats
+               :do (p f (< i last))))
+        ((array * (* *))
+         (destructuring-bind (rows cols) (array-dimensions float-or-floats)
+           (dotimes (r rows)
+             (dotimes (c cols)
+               (p (aref float-or-floats r c) (< c (1- cols))))
+             (when (< r (1- rows))
+               (terpri s)))))))))
 
 
 ;;;; Testing ------------------------------------------------------------------

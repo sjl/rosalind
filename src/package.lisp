@@ -24,6 +24,8 @@
 
     :mapcount
 
+    :hamming
+
     :string-empty-p
     :first-char
 
