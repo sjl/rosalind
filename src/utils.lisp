@@ -178,7 +178,7 @@
            (multiplying i)))
 
 
-(defmacro do-sum ((var from to) &body body)
+(defmacro do-sum ((var from to &key (initial-value 0) modulo) &body body)
   "Sum `body` with `var` iterating over `[from, to]`.
 
   It's just Σ:
@@ -193,13 +193,16 @@
 
   "
   (once-only (to)
-    (with-gensyms (result)
+    (with-gensyms (result mod)
       `(do ((,var ,from (1+ ,var))
-            (,result 0))
+            ,@(when modulo `((,mod ,modulo)))
+            (,result ,initial-value))
          ((> ,var ,to) ,result)
-         (incf ,result (progn ,@body))))))
+         ,(if modulo
+            `(setf ,result (mod (+ ,result (progn ,@body)) ,mod))
+            `(incf ,result (progn ,@body)))))))
 
-(defmacro do-product ((var from to) &body body)
+(defmacro do-product ((var from to &key (initial-value 1) modulo) &body body)
   "Multiply `body` with `var` iterating over `[from, to]`.
 
   It's just Π:
@@ -213,11 +216,15 @@
 
   "
   (once-only (to)
-    (with-gensyms (result)
+    (with-gensyms (result mod)
       `(do ((,var ,from (1+ ,var))
-            (,result 1))
+            ,@(when modulo `((,mod ,modulo)))
+            (,result ,initial-value))
          ((> ,var ,to) ,result)
-         (setf ,result (* ,result (progn ,@body)))))))
+         (setf ,result
+               ,(if modulo
+                  `(mod (* ,result (progn ,@body)) ,mod)
+                  `(* ,result (progn ,@body))))))))
 
 
 (defmacro Σ (bindings &body body) ;; lol

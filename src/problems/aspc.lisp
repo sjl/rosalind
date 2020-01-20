@@ -5,9 +5,8 @@
 (define-problem aspc (data stream) "6 3" "42"
   (let ((n (read data))
         (m (read data)))
-    (iterate
-      (for k :from m :to n)
-      (u:summing* (u:binomial-coefficient n k) :modulo 1000000))))
+    (u:Σ (k m n :modulo 1000000)
+      (u:binomial-coefficient n k))))
 
 
 #; Scratch --------------------------------------------------------------------
