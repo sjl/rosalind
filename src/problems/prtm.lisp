@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/prtm (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/prtm)
 
 (defconstant +monoisotopic-mass-of-water+ 18.01056d0
   "The monoisotopic mass of a single water molecule, in Daltons.")
@@ -33,9 +34,9 @@
 (define-problem prtm (data string)
     "SKADYEK"
     "821.392"
-  (-<> data
-    (delete #\newline <>)
-    (summation <> :key #'monoisotopic-mass)
-    float-string))
+  (_ data
+    (delete #\newline _)
+    (summation _ :key #'monoisotopic-mass)
+    u:float-string))
 
 

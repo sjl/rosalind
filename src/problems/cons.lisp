@@ -1,6 +1,7 @@
-(in-package :rosalind)
+(defpackage :rosalind/cons (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/cons)
 
-(defparameter *input-cons* ">Rosalind_1
+(defparameter *input* ">Rosalind_1
 ATCCAGCT
 >Rosalind_2
 GGGCAACT
@@ -15,7 +16,7 @@ ATGCCATT
 >Rosalind_7
 ATGGCACT")
 
-(defparameter *output-cons* "ATGCAACT
+(defparameter *output* "ATGCAACT
 A: 5 1 0 0 5 5 0 0
 C: 0 0 1 4 2 0 6 1
 G: 1 1 6 3 0 1 0 0
@@ -114,9 +115,7 @@ T: 1 5 0 0 0 1 1 6
     (collecting winner :result-type 'string)))
 
 
-(define-problem cons (data stream)
-    *input-cons*
-    *output-cons*
+(define-problem cons (data stream) *input* *output*
   (let* ((profile-matrix (profile-matrix-from-fasta data))
          (consensus-string (consensus-string profile-matrix))
          (length (length consensus-string)))

@@ -1,10 +1,11 @@
-(in-package :rosalind)
+(defpackage :rosalind/lexf (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/lexf)
 
-(defparameter *input-lexf*
+(defparameter *input*
   "A C G T
 2")
 
-(defparameter *output-lexf*
+(defparameter *output*
   "AA
 AC
 AG
@@ -24,9 +25,7 @@ TT
 ")
 
 
-(define-problem lexf (data stream)
-    *input-lexf*
-    *output-lexf*
+(define-problem lexf (data stream) *input* *output*
   (let* ((alphabet (sort (remove #\space (read-line data)) #'char<))
          (n (read data))
          (string (make-string n)))

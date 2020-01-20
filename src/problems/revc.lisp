@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/revc (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/revc)
 
 ;; DNA is made up of two strands running in opposite directions, usually twisted
 ;; into a double helix, with the bases bonded:
@@ -28,16 +29,8 @@
 ;; polarized ends, with one end being called 3′ and the other being 5′, but I'm
 ;; not 100% sure.
 
-(defun nreverse-complement (dna)
-  (map-into dna #'dna-complement dna)
-  (nreverse dna))
-
-(defun reverse-complement (dna)
-  (nreverse-complement (copy-seq dna)))
-
 (define-problem revc (data string)
     "AAAACCCGGT"
     "ACCGGGTTTT"
-  "Return the reverse complement of `data`."
-  (nreverse-complement (delete #\newline data)))
+  (u:nreverse-complement (delete #\newline data)))
 

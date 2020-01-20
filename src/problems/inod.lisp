@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/inod (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/inod)
 
 ;; This one is trivial once you know the closed-form solution of N-2.  The
 ;; intuition for that can come in two parts.

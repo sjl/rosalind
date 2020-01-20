@@ -1,6 +1,7 @@
-(in-package :rosalind)
+(defpackage :rosalind/grph (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/grph)
 
-(defparameter *input-grph*
+(defparameter *input*
   ">Rosalind_0498
 AAATAAA
 >Rosalind_2391
@@ -12,7 +13,7 @@ AAATCCC
 >Rosalind_5013
 GGGTGGG")
 
-(defparameter *output-grph*
+(defparameter *output*
   "Rosalind_0498 Rosalind_0442
 Rosalind_0498 Rosalind_2391
 Rosalind_2391 Rosalind_2323
@@ -34,10 +35,8 @@ Rosalind_2391 Rosalind_2323
            :end2 k))
 
 
-(define-problem grph (data stream)
-    *input-grph*
-    *output-grph*
-  (let* ((data (read-fasta-into-hash-table data))
+(define-problem grph (data stream) *input* *output*
+  (let* ((data (u:read-fasta-into-hash-table data))
          (graph (digraph:make-digraph
                   :test #'equal
                   :initial-vertices (alexandria:hash-table-keys data))))

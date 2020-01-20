@@ -1,11 +1,12 @@
-(in-package :rosalind)
+(defpackage :rosalind/seto (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/seto)
 
-(defparameter *input-seto*
+(defparameter *input*
   "10
 {1, 2, 3, 4, 5}
 {2, 8, 5, 10}")
 
-(defparameter *output-seto*
+(defparameter *output*
   "{1, 2, 3, 4, 5, 8, 10}
 {2, 5}
 {1, 3, 4}
@@ -21,8 +22,8 @@
   (mapcar #'parse-integer (ppcre:all-matches-as-strings "\\d+" string)))
 
 (define-problem seto (data stream)
-    *input-seto*
-    *output-seto*
+    *input*
+    *output*
   (let ((u (alexandria:iota (read data) :start 1))
         (a (parse-set (read-line data)))
         (b (parse-set (read-line data))))
@@ -37,5 +38,3 @@
 
 
 #; Scratch --------------------------------------------------------------------
-
-(problem-seto)

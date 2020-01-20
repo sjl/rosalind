@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/fib (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/fib)
 
 (define-problem fib (data stream)
     "5 3"

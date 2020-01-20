@@ -1,9 +1,10 @@
-(in-package :rosalind)
+(defpackage :rosalind/pmch (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/pmch)
 
-(defparameter *input-pmch* ">Rosalind_23
+(defparameter *input* ">Rosalind_23
 AGCUAGUCAU")
 
-(defparameter *output-pmch* "12")
+(defparameter *output* "12")
 
 ;; We can make a few observations to make things easier (well, trivial).
 ;;
@@ -24,9 +25,7 @@ AGCUAGUCAU")
 ;; adenine we have N-1 uracils.  And so on down to the final pair.  So the total
 ;; number of choices we have for each graph is N(N-1)(N-2)…(1) = N!
 
-(define-problem pmch (data stream)
-    *input-pmch*
-    *output-pmch*
-  (let ((bases (nth-value 1 (read-fasta data))))
-    (* (factorial (count #\A bases))
-       (factorial (count #\G bases)))))
+(define-problem pmch (data stream) *input* *output*
+  (let ((bases (nth-value 1 (u:read-fasta data))))
+    (* (u:factorial (count #\A bases))
+       (u:factorial (count #\G bases)))))

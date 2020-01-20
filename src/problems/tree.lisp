@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/tree (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/tree)
 
 ;; For every edge we add we can link up two previously-unconnected trees.  If we
 ;; have N separate trees, we just need N-1 edges to connect them.  So the
@@ -6,7 +7,7 @@
 ;; given graph.  Some day I really need to add that as a utility function to
 ;; cl-digraph.
 
-(defparameter *input-tree*
+(defparameter *input*
   "10
 1 2
 2 8
@@ -15,7 +16,7 @@
 6 10
 7 9")
 
-(defparameter *output-tree*
+(defparameter *output*
   "3")
 
 (defun subgraph-vertices (graph start)
@@ -29,11 +30,9 @@
       (while found)
       (for subgraph = (subgraph-vertices graph vertex))
       (collect subgraph)
-      (map nil (curry #'digraph:remove-vertex graph) subgraph))))
+      (map nil (u:curry #'digraph:remove-vertex graph) subgraph))))
 
-(define-problem tree (data stream)
-    *input-tree*
-    *output-tree*
+(define-problem tree (data stream) *input* *output*
   (let ((graph (digraph:make-digraph
                  :initial-vertices (alexandria:iota (read data) :start 1))))
     (iterate
@@ -45,5 +44,3 @@
 
 
 #; Scratch --------------------------------------------------------------------
-
-(problem-tree)

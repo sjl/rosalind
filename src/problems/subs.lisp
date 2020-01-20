@@ -1,14 +1,13 @@
-(in-package :rosalind)
+(defpackage :rosalind/subs (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/subs)
 
-(defparameter *input-subs* "GATATATGCATATACTT
+(defparameter *input* "GATATATGCATATACTT
 ATAT")
 
-(defparameter *output-subs* "2 4 10")
+(defparameter *output* "2 4 10")
 
 
-(define-problem subs (data stream)
-    *input-subs*
-    *output-subs*
+(define-problem subs (data stream) *input* *output*
   (let ((haystack (read-line data))
         (needle (read-line data)))
     (iterate

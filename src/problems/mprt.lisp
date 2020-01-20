@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/mprt (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/mprt)
 
 ;; This was pretty simple, except for discovering that cl-ppcre's all-matches
 ;; function skips overlapping matches.  Otherwise we just convert the motif to
@@ -62,7 +63,7 @@ P20840_SAG1_YEAST
     (iterate
       (with n-glycosylation = (motif-to-regex *motif-n-glycosylation*))
       (for id :in-stream data :using #'read-line)
-      (for (nil . protein) = (uniprot id))
+      (for (nil . protein) = (u:uniprot id))
       (for matches = (all-matches-dammit n-glycosylation protein))
       (when matches
         (format s "~A~%~{~D~*~^ ~}~%" id (mapcar #'1+ matches))))))

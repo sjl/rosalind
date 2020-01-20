@@ -1,6 +1,7 @@
-(in-package :rosalind)
+(defpackage :rosalind/gc (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/gc)
 
-(defparameter *input-gc* ">Rosalind_6404
+(defparameter *input* ">Rosalind_6404
 CCTGCGGAAGATCGGCACTAGAATAGCCAGAACCGTTTCTCTGAGGCTTCCGGCCTTCCC
 TCCCACTAATAATTCTGAGG
 >Rosalind_5959
@@ -10,13 +11,11 @@ ATATCCATTTGTCAGCAGACACGC
 CCACCCTCGTGGTATGGCTAGGCATTCAGGAACCGGAGAACGCTTCAGACCAGCCCGGAC
 TGGGAACCTGCGGGCAGTAGGTGGAAT")
 
-(defparameter *output-gc* "Rosalind_0808
+(defparameter *output* "Rosalind_0808
 60.919540")
 
 
-(define-problem gc (data stream)
-    *input-gc*
-    *output-gc*
+(define-problem gc (data stream) *input* *output*
   (labels ((gcp (base)
              (or (char= #\G base)
                  (char= #\C base)))
@@ -28,7 +27,3 @@ TGGGAACCTGCGGGCAGTAGGTGGAAT")
       (for gc = (gc-content dna))
       (finding (format nil "~A~%~,6F" label (* 100 gc))
                :maximizing gc))))
-
-
-;; (problem-gc *input-gc*)
-;; (solve gc)

@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/iev (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/iev)
 
 (define-problem iev (data stream)
     "1 0 0 1 0 1"
@@ -9,7 +10,7 @@
          (hh (read data))
          (hr (read data))
          (rr (read data)))
-    (float-string
+    (u:float-string
       ;; It's just a weighted average…
       (* 2 (+ (* dd 1)
               (* dh 1)

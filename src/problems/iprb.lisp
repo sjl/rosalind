@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/iprb (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/iprb)
 
 (define-problem iprb (data stream)
     "2 2 2"
@@ -24,7 +25,7 @@
              ;;          = 2XY/N²-N
              (/ (* 2 x y)
                 (- (* n n) n))))
-      (float-string
+      (u:float-string
         (+ (* (p-same d d) 1)      ;; AA AA
            (* (p-diff d h) 1)      ;; AA Aa
            (* (p-diff d r) 1)      ;; AA aa
@@ -32,6 +33,3 @@
            (* (p-diff h r) 1/2)    ;; Aa aa
            (* (p-same r r) 0))
         5)))) ;; aa aa
-
-;; (problem-iprb)
-;; (solve iprb)

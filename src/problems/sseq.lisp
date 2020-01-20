@@ -1,12 +1,13 @@
-(in-package :rosalind)
+(defpackage :rosalind/sseq (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/sseq)
 
-(defparameter *input-sseq* ">Rosalind_14
+(defparameter *input* ">Rosalind_14
 ACGTACGTGACG
 >Rosalind_18
 GTA
 ")
 
-(defparameter *output-sseq* "3 4 5")
+(defparameter *output* "3 4 5")
 
 ;; todo: make this more efficient for lists
 (defun subsequence-positions (needle haystack &key
@@ -26,11 +27,9 @@ GTA
         (return result)
         (setf n (elt needle ni))))))
 
-(define-problem sseq (data stream)
-    *input-sseq*
-    *output-sseq*
-  (let* ((haystack (nth-value 1 (read-fasta data)))
-         (needle (nth-value 1 (read-fasta data))))
+(define-problem sseq (data stream) *input* *output*
+  (let* ((haystack (nth-value 1 (u:read-fasta data)))
+         (needle (nth-value 1 (u:read-fasta data))))
     (-<> (subsequence-positions needle haystack :test #'char=)
       (mapcar #'1+ <>)
       (format nil "~{~D~^ ~}" <>))))

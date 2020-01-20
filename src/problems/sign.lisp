@@ -1,8 +1,9 @@
-(in-package :rosalind)
+(defpackage :rosalind/sign (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/sign)
 
-(defparameter *input-sign* "2")
+(defparameter *input* "2")
 
-(defparameter *output-sign* "8
+(defparameter *output* "8
 -1 -2
 -1 2
 -2 -1
@@ -17,21 +18,16 @@
   (if (null list)
     (list '()) ;; there is exactly one permutation of the empty list: ()
     (destructuring-bind (n . more) list
-      (append (mapcar (curry #'cons n) (sign-permutations more))
-              (mapcar (curry #'cons (- n)) (sign-permutations more))))))
+      (append (mapcar (u:curry #'cons n) (sign-permutations more))
+              (mapcar (u:curry #'cons (- n)) (sign-permutations more))))))
 
-(define-problem sign (data string)
-    *input-sign*
-    *output-sign*
+(define-problem sign (data string) *input* *output*
   (let* ((n (parse-integer data))
          (count (* (expt 2 n)
-                   (factorial n)))
+                   (u:factorial n)))
          (perms (mapcan #'sign-permutations
-                        (permutations (alexandria:iota n :start 1)))))
+                        (u:permutations (alexandria:iota n :start 1)))))
     ;; sort to ensure consistent output for the unit test
     (format nil "~D~%~{~A~^~%~}"
             count
-            (sort (mapcar (curry #'str:join " ") perms) #'string<))))
-
-;; (problem-sign "2")
-;; (solve sign)
+            (sort (mapcar (u:curry #'str:join " ") perms) #'string<))))

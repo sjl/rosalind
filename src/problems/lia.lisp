@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/lia (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/lia)
 
 ;; When a heterozygous organism mates, its offspring have a 50% chance to be
 ;; heterozygous themselves, *regardless of what the other mate happens to be*:
@@ -30,7 +31,7 @@
   ;; so we just sum up the probabilities of all of them.
   (let ((failures (- trials successes))
         (failure-probability (- 1 success-probability)))
-    (* (binomial-coefficient trials successes)
+    (* (u:binomial-coefficient trials successes)
        (expt success-probability successes)
        (expt failure-probability failures))))
 
@@ -42,7 +43,7 @@
 
   "
   ;; P(≥S) = P(=S) + P(=S+1) + … + P(N)
-  (Σ (n successes trials)
+  (u:Σ (n successes trials)
     (bernoulli-exactly n trials success-probability)))
 
 (define-problem lia (data stream)
@@ -51,4 +52,4 @@
   (let* ((generations (read data))
          (target (read data))
          (population (expt 2 generations)))
-    (float-string (bernoulli-at-least target population 1/4))))
+    (u:float-string (bernoulli-at-least target population 1/4))))

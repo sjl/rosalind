@@ -1,8 +1,9 @@
-(in-package :rosalind)
+(defpackage :rosalind/perm (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/perm)
 
-(defparameter *input-perm* "3")
+(defparameter *input* "3")
 
-(defparameter *output-perm* "6
+(defparameter *output* "6
 1 2 3
 1 3 2
 2 1 3
@@ -11,16 +12,11 @@
 3 2 1")
 
 
-(define-problem perm (data string)
-    *input-perm*
-    *output-perm*
+(define-problem perm (data string) *input* *output*
   (let* ((n (parse-integer data))
-         (count (factorial n))
-         (perms (permutations (alexandria:iota n :start 1))))
+         (count (u:factorial n))
+         (perms (u:permutations (alexandria:iota n :start 1))))
     (format nil "~D~%~{~A~^~%~}"
             count
             ;; sort to ensure consistent output for the unit test
-            (sort (mapcar (curry #'str:join " ") perms) #'string<))))
-
-;; (problem-perm "3")
-;; (solve perm)
+            (sort (mapcar (u:curry #'str:join " ") perms) #'string<))))

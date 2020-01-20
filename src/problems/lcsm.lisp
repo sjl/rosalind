@@ -1,14 +1,17 @@
-(in-package :rosalind)
+(defpackage :rosalind/lcsm (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/lcsm)
 
 ;; This one sucked.  We should use suffix trees some day but I just hacked this
 ;; together for now.
 
-(defparameter *input-lcsm* ">Rosalind_1
+(defparameter *input* ">Rosalind_1
 GATTACA
 >Rosalind_2
 TAGACCA
 >Rosalind_3
 ATACA")
+
+(defparameter *output* "AC")
 
 (defun compute-substring-table% (string1 string2)
   ;; Compute the table of substring lengths.
@@ -57,7 +60,7 @@ ATACA")
 (defun longest (strings)
   "Return a list of the longest strings in `strings`."
   (remove-if-not
-    (curry #'= (alexandria:extremum (mapcar #'length strings) #'>))
+    (u:curry #'= (alexandria:extremum (mapcar #'length strings) #'>))
     strings :key #'length))
 
 (defun longest-common-substrings-of-any (substrings string)
@@ -68,10 +71,8 @@ ATACA")
     longest
     (remove-duplicates <> :test #'string=)))
 
-(define-problem lcsm (data stream)
-    *input-lcsm*
-    "AC"
-  (let ((lines (mapcar #'cdr (read-fasta-into-alist data))))
+(define-problem lcsm (data stream) *input* *output*
+  (let ((lines (mapcar #'cdr (u:read-fasta-into-alist data))))
     (-<> (reduce #'longest-common-substrings-of-any (rest lines)
                  :initial-value (list (first lines)))
       (sort <> #'string<) ; tests

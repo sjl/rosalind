@@ -1,6 +1,7 @@
-(in-package :rosalind)
+(defpackage :rosalind/long (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/long)
 
-(defparameter *input-long*
+(defparameter *input*
   ">Rosalind_56
 ATTAGACCTG
 >Rosalind_57
@@ -10,7 +11,7 @@ AGACCTGCCG
 >Rosalind_59
 GCCGGAATAC")
 
-(defparameter *output-long*
+(defparameter *output*
   "ATTAGACCTGCCGGAATAC")
 
 
@@ -26,10 +27,8 @@ GCCGGAATAC")
   (concatenate 'string left (subseq right (overlap left right))))
 
 
-(define-problem long (data stream)
-    *input-long*
-    *output-long*
-  (let* ((dna (mapcar #'cdr (read-fasta-into-alist data)))
+(define-problem long (data stream) *input* *output*
+  (let* ((dna (mapcar #'cdr (u:read-fasta-into-alist data)))
          (graph (digraph:make-digraph :initial-vertices dna :test #'equal)))
     (dolist (left dna)
       (dolist (right dna)

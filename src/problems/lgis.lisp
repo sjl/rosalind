@@ -1,10 +1,11 @@
-(in-package :rosalind)
+(defpackage :rosalind/lgis (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/lgis)
 
-(defparameter *input-lgis*
+(defparameter *input*
   "5
 5 1 4 2 3")
 
-(defparameter *output-lgis*
+(defparameter *output*
   "1 2 3
 5 4 3")
 
@@ -104,7 +105,7 @@
             (for (values nil tail-index) =
                  (bisect-right predicate tail-indexes value
                                :start 1 ; ignore the garbage
-                               :key (curry #'aref sequence))) ; deref when bisecting
+                               :key (u:curry #'aref sequence))) ; deref when bisecting
             (if tail-index
               (progn
                 ;; Found a more minimal tail for existing subseq
@@ -122,9 +123,7 @@
       result-type)))
 
 
-(define-problem lgis (data stream)
-    *input-lgis*
-    *output-lgis*
+(define-problem lgis (data stream) *input* *output*
   (let* ((size (read data))
          (elements (gimme size (read data))))
     (with-output-to-string (s)

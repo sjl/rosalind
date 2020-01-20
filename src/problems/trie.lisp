@@ -1,11 +1,12 @@
-(in-package :rosalind)
+(defpackage :rosalind/trie (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/trie)
 
-(defparameter *input-trie*
+(defparameter *input*
   "ATAGA
 ATC
 GAT")
 
-(defparameter *output-trie*
+(defparameter *output*
   "1 2 A
 2 3 T
 3 4 A
@@ -22,12 +23,12 @@ GAT")
 
 (defun make-trie (strings)
   (recursively ((strings strings))
-    (let ((terminal (find-if #'string-empty-p strings))
-          (strings (remove-if #'string-empty-p strings)))
+    (let ((terminal (find-if #'u:string-empty-p strings))
+          (strings (remove-if #'u:string-empty-p strings)))
       (make-trie-node
         :terminal (if terminal t nil)
         :children (iterate
-                    (for (ch kids) :in-hashtable (group-by #'first-char strings))
+                    (for (ch kids) :in-hashtable (group-by #'u:first-char strings))
                     (collect-hash (ch (recur (mapcar (lambda (s) (subseq s 1))
                                                      kids)))))))))
 
@@ -78,10 +79,8 @@ GAT")
             (gather (list (n node) (n child) ch))
             (recur child)))))))
 
-(define-problem trie (data stream)
-    *input-trie*
-    *output-trie*
-  (let* ((strings (read-lines data))
+(define-problem trie (data stream) *input* *output*
+  (let* ((strings (u:read-lines data))
          (trie (make-trie strings)))
     ;; (dot-graph 'trie trie :rankdir :tb)
     (format nil "~{~{~A~^ ~}~^~%~}" (trie-adjacency-list trie))))

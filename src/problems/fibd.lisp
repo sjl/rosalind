@@ -1,9 +1,10 @@
-(in-package :rosalind)
+(defpackage :rosalind/fibd (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/fibd)
 
 (define-problem fibd (data stream)
     "6 3"
     "4"
-  (iter
+  (iterate
     (with months = (read data))
     (with lifespan = (read data))
     (for month :from 2 :to months)
@@ -23,12 +24,14 @@
                   (births month))))
       ;; We initialize the buffers with NIL in index 0 for the 1-based months,
       ;; and 1 in index 0 for the initial pair of rabbits.
-      (buffering (returning-final (population month))
-                 :into population
-                 :initial-contents '(nil 1))
-      (buffering (births month)
-                 :into births
-                 :initial-contents '(nil 1)))))
+      (u:buffering (u:returning-final (population month))
+                   :into population
+                   :initial-contents '(nil 1))
+      (u:buffering (births month)
+                   :into births
+                   :initial-contents '(nil 1)))))
 
+
+#; Scratch --------------------------------------------------------------------
 (problem-fibd "45 6")
 ;; (solve fibd)

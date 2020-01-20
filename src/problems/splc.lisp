@@ -1,13 +1,14 @@
-(in-package :rosalind)
+(defpackage :rosalind/splc (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/splc)
 
-(defparameter *input-splc* ">Rosalind_10
+(defparameter *input* ">Rosalind_10
 ATGGTCTACATAGCTGACAAACAGCACGTAGCAATCGGTCGAATCTCGAGAGGCATATGGTCACATGATCGGTCGAGCGTGTTTCAAAGTTTGCGCCTAG
 >Rosalind_12
 ATCGGTCGAA
 >Rosalind_15
 ATCGGTCGAGCGTGT")
 
-(defparameter *output-splc* "MVYIADKQHVASREAYGHMFKVCA")
+(defparameter *output* "MVYIADKQHVASREAYGHMFKVCA")
 
 
 (defun prefixp (prefix vector &key (start 0) (test #'eql))
@@ -31,7 +32,7 @@ ATCGGTCGAGCGTGT")
   (prefixp intron dna :start start))
 
 (defun find-intron (introns dna &key (start 0))
-  (find-if (rcurry #'intron-matches-p dna :start start) introns))
+  (find-if (u:rcurry #'intron-matches-p dna :start start) introns))
 
 (defun remove-introns (dna introns)
   (iterate
@@ -43,11 +44,11 @@ ATCGGTCGAGCGTGT")
 
 
 (define-problem splc (data stream)
-    *input-splc*
-    *output-splc*
+    *input*
+    *output*
   (destructuring-bind (dna . introns)
-      (mapcar #'cdr (read-fasta-into-alist data))
-    (-<> dna
-      (remove-introns <> introns)
-      transcribe
-      translate)))
+      (mapcar #'cdr (u:read-fasta-into-alist data))
+    (_ dna
+      (remove-introns _ introns)
+      u:transcribe
+      u:translate)))

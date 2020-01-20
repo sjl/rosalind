@@ -1,10 +1,11 @@
-(in-package :rosalind)
+(defpackage :rosalind/lexv (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/lexv)
 
-(defparameter *input-lexv*
+(defparameter *input*
   "D N A
 3")
 
-(defparameter *output-lexv*
+(defparameter *output*
   "D
 DD
 DDD
@@ -47,9 +48,7 @@ AAA
 ")
 
 
-(define-problem lexv (data stream)
-    *input-lexv*
-    *output-lexv*
+(define-problem lexv (data stream) *input* *output*
   (let* ((alphabet (remove #\space (read-line data)))
          (n (read data))
          (string (make-string n)))

@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/dna (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/dna)
 
 ;; Nucleic acids are polymers, which means they're long, repeating chains of
 ;; smaller molecules called monomers.

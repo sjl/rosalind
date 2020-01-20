@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/rna (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/rna)
 
 ;; RNA is a another nucleic acid that is similar to DNA, with the following
 ;; differences:
@@ -16,17 +17,9 @@
 ;; After that the mRNA exists the nucleus.  Then proteins are produced from the
 ;; mRNA by ribosomes.  That process is called "translation".
 
-(defun transcribe (dna)
-  "Transcribe a fresh RNA string from `DNA`."
-  (substitute #\U #\T dna))
-
-(defun ntranscribe (dna)
-  "Destructively transcribe `DNA` to RNA in-place."
-  (nsubstitute #\U #\T dna))
-
 (define-problem rna (data string)
     "GATGGAACTTGACTACGTAAATT"
     "GAUGGAACUUGACUACGUAAAUU"
   "Transcribe `data` from DNA into RNA."
-  (ntranscribe data))
+  (u:ntranscribe data))
 

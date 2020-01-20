@@ -1,15 +1,14 @@
-(in-package :rosalind)
+(defpackage :rosalind/pper (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/pper)
 
-(defparameter *input-pper*
+(defparameter *input*
   "21 7")
 
-(defparameter *output-pper*
+(defparameter *output*
   "51200")
 
 
-(define-problem pper (data stream)
-    *input-pper*
-    *output-pper*
+(define-problem pper (data stream) *input* *output*
   (let ((total (read data))
         (size (read data)))
     ;; The number of combinations of k out of n elements is:

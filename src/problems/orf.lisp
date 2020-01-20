@@ -1,10 +1,11 @@
-(in-package :rosalind)
+(defpackage :rosalind/orf (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/orf)
 
-(defparameter *input-orf*
+(defparameter *input*
   ">Rosalind_99
 AGCCATGTAGCTAACTCAGGTTACATGGGGATGACCCCGCGACTTGGATTAGAGTCTCTTTTGGAATAAGCCTGAATGATCCGAGTAGCATCTCAG")
 
-(defparameter *output-orf*
+(defparameter *output*
   "M
 MTPRLGLESLLE
 MGMTPRLGLESLLE
@@ -15,16 +16,14 @@ MLLGSFRLIPKETLIQVAGSSPCNLS")
   "Return all possible proteins that can be translated from `rna`."
   (iterate
     (for start :first 0 :then (1+ protein-start))
-    (for (values protein protein-start) = (translate rna :start start))
+    (for (values protein protein-start) = (u:translate rna :start start))
     (while protein)
     (collect protein)))
 
-(define-problem orf (data stream)
-    *input-orf*
-    *output-orf*
-  (let* ((dna (cdr (first (read-fasta-into-alist data))))
-         (rna1 (transcribe dna))
-         (rna2 (transcribe (reverse-complement dna))))
+(define-problem orf (data stream) *input* *output*
+  (let* ((dna (cdr (first (u:read-fasta-into-alist data))))
+         (rna1 (u:transcribe dna))
+         (rna2 (u:transcribe (u:reverse-complement dna))))
     (-<> (append (translate-all rna1)
                  (translate-all rna2))
       (remove-duplicates <> :test #'string=)

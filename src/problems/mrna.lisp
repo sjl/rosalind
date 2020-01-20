@@ -1,4 +1,5 @@
-(in-package :rosalind)
+(defpackage :rosalind/mrna (:use :cl :rosalind :losh :iterate))
+(in-package :rosalind/mrna)
 
 ;; We're using a real programming language, so we have actual numbers and don't
 ;; need to bother with modular arithmetic for the tiny inputs they're giving us
@@ -49,9 +50,7 @@
   (length (acid-to-codons acid)))
 
 
-(define-problem mrna (data string)
-    "MA"
-    "12"
+(define-problem mrna (data string) "MA" "12"
   (product (delete #\newline data)
            :modulo 1000000
            :key #'acid-codon-count
