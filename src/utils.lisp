@@ -530,7 +530,10 @@
 
 (defun solve% (problem)
   (with-open-file (input (problem-data-path problem))
-    (pbcopy (aesthetic-string (funcall problem input)))))
+    (let ((result (aesthetic-string (funcall problem input))))
+      (pbcopy result)
+      (format t "Copied the following to clipboard:~%~A~%" result)
+      (values))))
 
 (defmacro solve (name)
   (assert (symbolp name) ()
