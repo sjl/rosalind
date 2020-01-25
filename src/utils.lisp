@@ -433,24 +433,43 @@
 
 
 ;;;; Uniprot ------------------------------------------------------------------
-(defvar *uniprot-cache* (make-hash-table :test #'equal))
+(defparameter *cache-dir*
+  (_ (or (uiop:getenv "XDG_CACHE_HOME")
+         (format nil "~A/.cache" (uiop:getenv "HOME")))
+    (string-right-trim "/" _)
+    (format nil "~A/sjl-rosalind/" _)))
 
-(defmacro get-cached (key cache expr)
-  (once-only (key cache)
-    (with-gensyms (value)
-      `(if-found (,value (gethash ,key ,cache))
-         ,value
-         (setf (gethash ,key ,cache) ,expr)))))
+(defun cache-path (key)
+  (concatenate 'string *cache-dir* key))
+
+(defun cachedp (key)
+  (probe-file (cache-path key)))
+
+(defun getcache (key)
+  (with-open-file (s (cache-path key))
+    (read s)))
+
+(defun setcache (key value)
+  (ensure-directories-exist *cache-dir*)
+  (let ((*print-readably* t))
+    (with-open-file (s (cache-path key) :direction :output)
+      (print value s)))
+  value)
+
+(defmacro ensure-cached (key expr)
+  (once-only (key)
+    `(if (cachedp ,key)
+       (getcache ,key)
+       (setcache ,key ,expr))))
 
 (defun uniprot-url (id)
   (format nil "http://www.uniprot.org/uniprot/~A.fasta" id))
 
 (defun uniprot (id)
-  (get-cached id *uniprot-cache*
-              (_ (uniprot-url id)
-                drakma:http-request
-                read-fasta-into-alist
-                first)))
+  (ensure-cached id (_ (uniprot-url id)
+                      drakma:http-request
+                      read-fasta-into-alist
+                      first)))
 
 
 ;;;; Output -------------------------------------------------------------------
