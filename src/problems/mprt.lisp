@@ -25,10 +25,10 @@ P20840_SAG1_YEAST
 
 (defun motif-to-regex (motif)
   "Turn a protein motif shorthand into a PPCRE scanner."
-  (-<> motif
+  (_ motif
     ;; All we have to do is turn {X} into [^X] and compile.
-    (ppcre:regex-replace-all "[{]" <> "[^")
-    (substitute #\] #\} <>)
+    (ppcre:regex-replace-all "[{]" _ "[^")
+    (substitute #\] #\} _)
     ppcre:create-scanner))
 
 (defun all-matches-dammit (regex target-string)

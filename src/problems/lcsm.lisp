@@ -65,15 +65,15 @@ ATACA")
 
 (defun longest-common-substrings-of-any (substrings string)
   "Return the longest common substrings of `string` and any one of `substrings`."
-  (-<> (iterate
+  (_ (iterate
          (for substring :in substrings)
          (appending (longest-common-substrings substring string)))
     longest
-    (remove-duplicates <> :test #'string=)))
+    (remove-duplicates _ :test #'string=)))
 
 (define-problem lcsm (data stream) *input* *output*
   (let ((lines (mapcar #'cdr (u:read-fasta-into-alist data))))
-    (-<> (reduce #'longest-common-substrings-of-any (rest lines)
+    (_ (reduce #'longest-common-substrings-of-any (rest lines)
                  :initial-value (list (first lines)))
-      (sort <> #'string<) ; tests
+      (sort _ #'string<) ; tests
       first)))

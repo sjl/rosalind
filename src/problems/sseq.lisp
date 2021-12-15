@@ -30,6 +30,6 @@ GTA
 (define-problem sseq (data stream) *input* *output*
   (let* ((haystack (nth-value 1 (u:read-fasta data)))
          (needle (nth-value 1 (u:read-fasta data))))
-    (-<> (subsequence-positions needle haystack :test #'char=)
-      (mapcar #'1+ <>)
-      (format nil "~{~D~^ ~}" <>))))
+    (_ (subsequence-positions needle haystack :test #'char=)
+      (mapcar #'1+ _)
+      (format nil "~{~D~^ ~}" _))))

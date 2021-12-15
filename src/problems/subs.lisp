@@ -14,5 +14,5 @@ ATAT")
       (for pos :seed -1 :then (search needle haystack :start2 (1+ pos)))
       (while pos)
       (collect (1+ pos) :into result)
-      (finally (return (str:join " " result))))))
+      (finally (return (u:strjoin " " result))))))
 

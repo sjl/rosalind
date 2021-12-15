@@ -49,10 +49,10 @@ Rosalind_2391 Rosalind_2323
              data)
     ;; (ql:quickload :cl-digraph.dot)
     ;; (digraph.dot:draw graph)
-    (-<> (iterate (for (l . r) :in (digraph:edges graph))
+    (_ (iterate (for (l . r) :in (digraph:edges graph))
                   (collect (format nil "~A ~A~%" l r)))
-      (sort <> #'string<)
-      (str:join nil <>))))
+      (sort _ #'string<)
+      (str:join "" _))))
 
 
 

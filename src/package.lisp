@@ -27,6 +27,7 @@
     :hamming
 
     :string-empty-p
+    :strjoin
     :first-char
 
     :Σ :Π :binomial-coefficient

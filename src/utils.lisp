@@ -100,9 +100,9 @@
                        (iterate (for (head body) :in clauses)
                                 (collect (list (subseq head 1) body)))))
                    (split (clauses)
-                     (-<> clauses
-                       (group-by (rcurry #'aref 0) <> :key #'first)
-                       (iterate (for (k v) :in-hashtable <>)
+                     (_ clauses
+                       (group-by (rcurry #'aref 0) _ :key #'first)
+                       (iterate (for (k v) :in-hashtable _)
                                 (collect (list k (strip v)))))))
             (recursively ((clauses (split clauses))
                           (codons (list x y z))
@@ -169,6 +169,11 @@
   (if (string-empty-p string)
     nil
     (char string 0)))
+
+(defun strjoin (sep seq)
+  (iterate (for el :in-whatever seq)
+           (concatenating (if (stringp el) el (aesthetic-string el))
+                          :separator sep)))
 
 
 ;;;; Math ---------------------------------------------------------------------

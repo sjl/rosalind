@@ -30,4 +30,4 @@
     ;; sort to ensure consistent output for the unit test
     (format nil "~D~%~{~A~^~%~}"
             count
-            (sort (mapcar (u:curry #'str:join " ") perms) #'string<))))
+            (sort (mapcar (u:curry #'u:strjoin " ") perms) #'string<))))
